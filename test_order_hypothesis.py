@@ -24,7 +24,7 @@ class OrderTest(RuleBasedStateMachine):
     def create_line_item(self, description : str, price : int, quantity : int)-> None: 
         self.line_items.append(LineItem(description, price, quantity))
 
-    # @precondition(lambda self : len(self.line_items)> 0) 
+    @precondition(lambda self : len(self.line_items)> 0) 
     @rule(data = st.data())
     def add_line_line_to_order(self, data : st.SearchStrategy) -> None: 
         line_item = data.draw(st.sampled_from(self.line_items))
