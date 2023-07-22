@@ -32,10 +32,17 @@ class OrderTest(RuleBasedStateMachine):
 
     @precondition(lambda self : len(self.order.line_items)> 0) 
     @rule(data = st.data())
-    def remove_line_line_to_order(self, data : st.SearchStrategy) -> None: 
+    def remove_line_litem_from_order(self, data : st.SearchStrategy) -> None: 
         line_item = data.draw(st.sampled_from(self.order.line_items))
         self.order.remove_line_item(line_item)
     
+
+    @precondition(lambda self : len(self.order.line_items)== 0 and len(self.line_items)> 0) 
+    @rule(data = st.data())
+    def remove_a_non_existing_line_litem_from_order(self, data : st.SearchStrategy) -> None: 
+        line_item = data.draw(st.sampled_from(self.line_items))
+        with pytest.raises(ValueError) : 
+            self.order.remove_line_item(line_item)
 
 
     @rule()

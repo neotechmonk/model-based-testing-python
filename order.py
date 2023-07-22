@@ -27,13 +27,13 @@ class Order:
 
     def remove_line_item(self, line_item: LineItem) -> None:
         if not line_item in self.line_items:
-            return
+            raise ValueError(f"Line item {line_item} does not exist in Order ")
         self.line_items.remove(line_item)
         self._update_total_cache()
 
     def update_li_quantity(self, line_item: LineItem, quantity: int) -> None:
         if not line_item in self.line_items:
-            return
+            return 
         line_item.quantity = quantity
         self._update_total_cache()
 
