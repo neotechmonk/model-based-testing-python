@@ -23,6 +23,18 @@ class OrderTest(RuleBasedStateMachine):
     @rule(description = st.text(), price = st.integers(), quantity = st.integers())
     def create_line_item(self, description : str, price : int, quantity : int)-> None: 
         self.line_items.append(LineItem(description, price, quantity))
-                               
+
+    # @precondition(lambda self : len(self.line_items)> 0) 
+    @rule(data = st.data())
+    def add_line_line_to_order(self, data : st.SearchStrategy) -> None: 
+        line_item = data.draw(st.sampled_from(self.line_items))
+        self.order.add_line_item(line_item)
+    
+
+
+
+    @rule()
+    def total_agrees(self) -> None:
+        assert sum(li.total for li in self.order.line_items) == self.order.total
 
 OrderTestCase : unittest.TestCase = OrderTest.TestCase
