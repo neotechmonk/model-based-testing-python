@@ -44,9 +44,20 @@ class OrderTest(RuleBasedStateMachine):
         with pytest.raises(ValueError) : 
             self.order.remove_line_item(line_item)
 
-
     @rule()
     def total_agrees(self) -> None:
         assert sum(li.total for li in self.order.line_items) == self.order.total
+
+    @precondition(lambda self: len(self.order.line_items)==0)
+    @rule()
+    def total_agrees_zero(self) -> None:
+        assert sum(li.total for li in self.order.line_items) == self.order.total
+
+
+    @precondition( lambda self : len(self.order.line_items) > 0 )
+    @rule(data = st.data(), quantity =  st.integers())
+    def  update_line_quantity(self, data: st.SearchStrategy, quantity : int) -> None:
+        line_item = data.draw(st.sampled_from(self.order.line_items))
+        self.order.update_li_quantity(line_item=line_item, quantity=  quantity)
 
 OrderTestCase : unittest.TestCase = OrderTest.TestCase
