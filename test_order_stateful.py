@@ -3,6 +3,7 @@ import unittest
 import hypothesis.strategies as st
 import pytest
 from hypothesis.stateful import RuleBasedStateMachine, precondition, rule
+
 from order import LineItem, Order
 
 
